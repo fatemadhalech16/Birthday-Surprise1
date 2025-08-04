@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Surprise Countdown</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #ffe0f0;
+            font-family: 'Nunito', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            z-index: 2; /* Ensure text is on top */
+            position: relative;
+            padding: 0 10px;
+            transform: translateZ(0); /* Prevent text from beating with hearts */
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 10vw;
+            color: #b30059;
+            margin-bottom: 10px;
+        }
+
+        #timer {
+            font-family: 'Dancing Script', cursive;
+            font-size: 5vw;
+            color: #660033;
+            font-weight: bold;
+        }
+
+        /* Floating hearts */
+        .heart {
+            width: 20px;
+            height: 20px;
+            background: #ffb3c1; /* Darker baby pink */
+            position: absolute;
+            bottom: -20px;
+            transform: rotate(-45deg);
+            animation: float 8s linear infinite;
+            opacity: 0.6;
+            z-index: 1; /* Ensure hearts are behind text */
+        }
+
+        .heart::before,
+        .heart::after {
+            content: "";
+            width: 20px;
+            height: 20px;
+            background: #ffb3c1; /* Darker baby pink */
+            position: absolute;
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            top: -10px;
+            left: 0;
+        }
+
+        .heart::after {
+            left: 10px;
+            top: 0;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(-45deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-110vh) rotate(-45deg);
+                opacity: 0;
+            }
+        }
+
+        /* Beating hearts */
+        .beating-heart {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #ffb3c1; /* Darker baby pink */
+            transform: rotate(-45deg);
+            animation: beat 1.5s ease-in-out infinite;
+            z-index: 1; /* Ensure hearts are behind text */
+        }
+
+        .beating-heart::before,
+        .beating-heart::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #ffb3c1; /* Darker baby pink */
+            border-radius: 50%;
+        }
+
+        .beating-heart::before {
+            top: -25px;
+            left: 0;
+        }
+
+        .beating-heart::after {
+            top: 0;
+            left: 25px;
+        }
+
+        @keyframes beat {
+            0%, 100% {
+                transform: scale(1) rotate(-45deg);
+            }
+            50% {
+                transform: scale(1.2) rotate(-45deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Something Sweet is<br>Coming... 💖</h1>
+        <div id="timer">Loading countdown...</div>
+    </div>
+
+    <!-- Heart generator -->
+    <script>
+        // Add 15 random floating hearts
+        for (let i = 0; i < 15; i++) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDelay = Math.random() * 8 + "s";
+            heart.style.opacity = (0.4 + Math.random() * 0.6).toFixed(2);
+            document.body.appendChild(heart);
+        }
+
+        // Add 5 random beating hearts
+        for (let i = 0; i < 5; i++) {
+            const heart = document.createElement('div');
+            heart.classList.add('beating-heart');
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = Math.random() * 100 + 'vh';
+            document.body.appendChild(heart);
+        }
+
+        // Countdown logic
+        const releaseTime = new Date("{{ release_time|date:'Y-m-d H:i:s' }}").getTime();
+        let countdownInterval;
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = releaseTime - now;
+
+            if (distance < 0) {
+                document.getElementById("timer").innerHTML = "00h 00m 00s";
+                clearInterval(countdownInterval);
+                document.body.classList.add('fade-out');
+                setTimeout(() => {
+                    window.location.href = "{% url 'surprise' %}";
+                }, 1000); // Reverted to 1 second delay
+                return;
+            }
+
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("timer").innerHTML =
+                `${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>

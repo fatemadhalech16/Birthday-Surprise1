@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Love Surprise</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #ffe6f0;
+      font-family: 'Quicksand', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .background-hearts {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .background-hearts .big-heart {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background-image: url('https://i.imgur.com/9uC0ItZ.png');
+      background-size: cover;
+      opacity: 0.1;
+      animation: floatBigHeart 20s linear infinite;
+    }
+
+    @keyframes floatBigHeart {
+      0% { transform: translateY(0) rotate(0); }
+      100% { transform: translateY(-100vh) rotate(360deg); }
+    }
+
+    .content {
+      position: relative;
+      text-align: center;
+      z-index: 2;
+    }
+
+    h1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 3rem;
+      color: #d63384;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: #333;
+    }
+
+    button {
+      background-color: #d63384;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 30px;
+      margin-top: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #b0276c;
+    }
+
+    .emoji-heart {
+      position: absolute;
+      color: #ff69b4;
+      font-size: 20px;
+      animation: floatHearts 5s linear infinite;
+      opacity: 0.7;
+      z-index: 1;
+    }
+
+    @keyframes floatHearts {
+      0% { transform: translateY(0) rotate(0); opacity: 1; }
+      100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+    }
+
+    #love-note {
+      display: none;
+      margin-top: 2rem;
+      font-size: 1.3rem;
+      color: #5e0035;
+      background: #fff0f5;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 90%;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .read-more {
+      display: none;
+      background-color: #ff66b2;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 500;
+      text-decoration: none;
+      margin-top: 20px;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .read-more:hover {
+      background-color: #e60073;
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Blast elements */
+    .blast-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 3; /* Ensure blast is on top of other elements */
+        pointer-events: none; /* Allow clicks to pass through */
+    }
+
+    .confetti,
+    .flower,
+    .heart-blast {
+        position: absolute;
+        animation: blast 2s ease-out forwards;
+    }
+
+    .confetti {
+        width: 10px;
+        height: 10px;
+        background-color: #f00;
+    }
+
+    .flower {
+        font-size: 20px;
+        color: #ff69b4; /* Pink flower */
+    }
+
+    .heart-blast {
+        font-size: 20px;
+        color: #ff0000; /* Red heart */
+    }
+
+    @keyframes blast {
+        0% {
+            transform: translateY(-20vh) scale(1) rotate(0deg);
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(100vh) scale(0) rotate(720deg);
+            opacity: 0;
+        }
+    }
+  </style>
+</head>
+<body>
+  <div class="background-hearts" id="bg-hearts"></div>
+  <div class="blast-container" id="blast-container"></div>
+
+  <div class="content">
+    <h1>You're My Favorite Person 💖</h1>
+    <p>Click the button to reveal a surprise note!</p>
+    <button id="reveal-btn">Reveal Love Note</button>
+    <div id="love-note">
+      You're the reason behind my smile every single day. I’m so grateful for you. 💕
+    </div>
+    <a class="read-more" id="read-more-btn" href="/letter/">Read More</a>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const button = document.getElementById("reveal-btn");
+      const note = document.getElementById("love-note");
+      const readMoreBtn = document.getElementById("read-more-btn");
+
+      // Trigger blast on page load
+      triggerBlast();
+
+      button.addEventListener("click", () => {
+        note.style.display = "block";
+        readMoreBtn.style.display = "inline-block";
+        generateFloatingHearts();
+      });
+
+      function generateFloatingHearts() {
+        for (let i = 0; i < 20; i++) {
+          const heart = document.createElement("div");
+          heart.classList.add("emoji-heart");
+          heart.style.left = Math.random() * 100 + "vw";
+          heart.style.fontSize = (Math.random() * 20 + 10) + "px";
+          heart.innerHTML = "❤️";
+          heart.style.animationDuration = (Math.random() * 2 + 3) + "s";
+          document.body.appendChild(heart);
+
+          setTimeout(() => {
+            heart.remove();
+          }, 5000);
+        }
+      }
+
+      function generateBackgroundHearts() {
+        const container = document.getElementById("bg-hearts");
+        for (let i = 0; i < 15; i++) {
+          const heart = document.createElement("div");
+          heart.classList.add("big-heart");
+          heart.style.top = Math.random() * 100 + "vh";
+          heart.style.left = Math.random() * 100 + "vw";
+          heart.style.width = heart.style.height = (Math.random() * 40 + 20) + "px";
+          heart.style.animationDuration = (Math.random() * 20 + 10) + "s";
+          container.appendChild(heart);
+        }
+      }
+
+      function triggerBlast() {
+          const blastContainer = document.getElementById('blast-container');
+          const types = ['confetti', 'flower', 'heart-blast'];
+          const colors = ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff'];
+          const flowers = ['🌸', '🌼', '🌷', '🌻'];
+          const hearts = ['💖', '❤️', '💕', '💜'];
+
+          for (let i = 0; i < 150; i++) { // Increased count for more elements
+              const type = types[Math.floor(Math.random() * types.length)];
+              const element = document.createElement('div');
+              element.classList.add(type);
+
+              if (type === 'confetti') {
+                  element.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+              } else if (type === 'flower') {
+                  element.innerHTML = flowers[Math.floor(Math.random() * flowers.length)];
+              } else if (type === 'heart-blast') {
+                  element.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+              }
+
+              element.style.left = Math.random() * 100 + 'vw';
+              element.style.animationDelay = Math.random() * 0.5 + 's';
+              blastContainer.appendChild(element);
+          }
+      }
+
+      generateBackgroundHearts();
+    });
+  </script>
+</body>
+</html>

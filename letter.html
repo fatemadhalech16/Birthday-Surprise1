@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>A Letter for You</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:wght@400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #FFC0CB; /* Baby pink background */
+            font-family: 'Playfair Display', serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Hide hearts that go off-screen */
+        }
+
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #FF69B4; /* Deeper pink for hearts */
+            transform: rotate(-45deg);
+            animation: fall 10s linear infinite;
+            z-index: 1; /* Ensure hearts are behind the letter */
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #FF69B4;
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            top: -10px;
+            left: 0;
+        }
+
+        .heart::after {
+            top: 0;
+            left: 10px;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh) rotate(-45deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(-45deg);
+                opacity: 0;
+            }
+        }
+
+        .letter-container {
+            position: relative;
+            padding: 40px;
+            z-index: 2; /* Ensure letter is on top of hearts */
+            width: calc(100% - 20px); /* Full width minus 10px on each side */
+            margin: 0 10px; /* 10px margin on both sides */
+        }
+
+        .letter {
+            background-color: #fdf5e6; /* Faded paper color */
+            padding: 40px;
+            border: 1px solid #d2b48c;
+            box-shadow: 
+                0 0 20px rgba(0, 0, 0, 0.5), /* Outer shadow for depth */
+                inset 0 0 30px rgba(210, 180, 140, 0.7); /* Inner tan shadow */
+            position: relative;
+            max-width: 800px;
+            margin: auto;
+            border-radius: 15px / 225px; /* Creates a curly, torn-paper edge */
+        }
+
+        .letter::before,
+        .letter::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 2px solid transparent;
+            border-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="%238B4513" offset="0%"/><stop stop-color="%23D2B48C" offset="100%"/></linearGradient></defs><rect x="0" y="0" width="100" height="100" fill="url(%23g)"/></svg>') 10;
+            border-image-outset: 5px;
+            border-image-repeat: stretch;
+            border-image-slice: 10;
+            pointer-events: none;
+            -webkit-mask-image: radial-gradient(circle, black 50%, transparent 100%);
+            mask-image: radial-gradient(circle, black 50%, transparent 100%);
+            z-index: -1;
+        }
+        
+        .letter-content {
+            font-size: 22px;
+            color: #5D4037;
+            line-height: 1.8;
+            white-space: pre-wrap; /* Respects newlines and wraps text */
+            background-image: repeating-linear-gradient(to bottom, transparent, transparent 29px, #E0E0E0 30px);
+            background-size: 100% 30px;
+        }
+
+        .signature {
+            margin-top: 30px;
+            text-align: right;
+            font-family: 'Dancing Script', cursive;
+            font-size: 28px;
+            color: #C71585;
+        }
+    </style>
+</head>
+<body>
+    <div class="letter-container">
+        <div class="letter">
+            <div class="letter-content">
+                {{ letter_text|safe }}
+            </div>
+            <div class="signature">— Your Secret Admirer</div>
+        </div>
+    </div>
+
+    <script>
+        // Create falling hearts
+        const body = document.body;
+        for (let i = 0; i < 20; i++) {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDelay = Math.random() * 10 + 's';
+            body.appendChild(heart);
+        }
+    </script>
+</body>
+</html>
