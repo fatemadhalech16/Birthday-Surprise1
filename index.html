@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Surprise Countdown</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #ffe0f0;
+      font-family: 'Nunito', sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .container {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      z-index: 2;
+      position: relative;
+      padding: 0 10px;
+    }
+
+    h1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 10vw;
+      color: #b30059;
+      margin-bottom: 10px;
+    }
+
+    #timer {
+      font-family: 'Dancing Script', cursive;
+      font-size: 5vw;
+      color: #660033;
+      font-weight: bold;
+    }
+
+    .heart {
+      width: 20px;
+      height: 20px;
+      background: #ffb3c1;
+      position: absolute;
+      bottom: -20px;
+      transform: rotate(-45deg);
+      animation: float 8s linear infinite;
+      opacity: 0.6;
+      z-index: 1;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      width: 20px;
+      height: 20px;
+      background: #ffb3c1;
+      position: absolute;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: 10px;
+      top: 0;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) rotate(-45deg);
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-110vh) rotate(-45deg);
+        opacity: 0;
+      }
+    }
+
+    .beating-heart {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background-color: #ffb3c1;
+      transform: rotate(-45deg);
+      animation: beat 1.5s ease-in-out infinite;
+      z-index: 1;
+    }
+
+    .beating-heart::before,
+    .beating-heart::after {
+      content: '';
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background-color: #ffb3c1;
+      border-radius: 50%;
+    }
+
+    .beating-heart::before {
+      top: -25px;
+      left: 0;
+    }
+
+    .beating-heart::after {
+      top: 0;
+      left: 25px;
+    }
+
+    @keyframes beat {
+      0%, 100% {
+        transform: scale(1) rotate(-45deg);
+      }
+      50% {
+        transform: scale(1.2) rotate(-45deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Something Sweet is<br>Coming... 💖</h1>
+    <div id="timer">Loading countdown...</div>
+  </div>
+
+  <!-- Hearts: floating + beating -->
+  <script>
+    for (let i = 0; i < 15; i++) {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDelay = Math.random() * 8 + "s";
+      heart.style.opacity = (0.4 + Math.random() * 0.6).toFixed(2);
+      document.body.appendChild(heart);
+    }
+
+    for (let i = 0; i < 5; i++) {
+      const heart = document.createElement('div');
+      heart.classList.add('beating-heart');
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.top = Math.random() * 100 + 'vh';
+      document.body.appendChild(heart);
+    }
+  </script>
+
+  <!-- Timer Script -->
+  <script>
+    const releaseTime = new Date("2025-08-04T18:30:00Z").getTime(); // IST midnight
+
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const distance = releaseTime - now;
+
+      if (distance < 0) {
+        document.getElementById("timer").innerHTML = "🎉 Surprise Unlocked!";
+        setTimeout(() => {
+          window.location.href = "surprise.html"; // or correct relative link
+        }, 1000);
+        return;
+      }
+
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById("timer").innerHTML =
+        `${hours}h ${minutes}m ${seconds}s`;
+    };
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
+</body>
+</html>
