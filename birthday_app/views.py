@@ -44,7 +44,7 @@ def countdown(request):
 def surprise(request):
     timer = Timer.objects.first()
     if not timer or timezone.now() < timer.release_time:
-        return redirect('countdown')
+        return redirect('index')
     return render(request, 'birthday_app/surprise.html')
 
 def paragraph(request):
