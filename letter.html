@@ -1,4 +1,4 @@
-{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,6 +65,25 @@
             width: calc(100% - 20px); /* Full width minus 10px on each side */
             margin: 0 10px; /* 10px margin on both sides */
         }
+        
+        .letter::-webkit-scrollbar {
+    width: 12px; /* Width of the scrollbar */
+}
+
+.letter::-webkit-scrollbar-track {
+    background: #fdf5e6; /* Match background or make it subtle */
+    border-radius: 10px;
+}
+
+.letter::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #d2b48c, #a0522d); /* Gradient for modern effect */
+    border-radius: 10px;
+    border: 2px solid #fdf5e6; /* Adds padding-like effect */
+}
+
+.letter::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #a0522d, #8b4513); /* Darker on hover */
+}
 
         .letter {
             background-color: #fdf5e6; /* Faded paper color */
