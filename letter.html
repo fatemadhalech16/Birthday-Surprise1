@@ -1,10 +1,10 @@
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>A Letter for You</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:wght@400&display=swap" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:wght@400&display=swap" rel="stylesheet"> -->
     <style>
         body {
             background-color: #FFC0CB; /* Baby pink background */
@@ -77,6 +77,8 @@
             max-width: 800px;
             margin: auto;
             border-radius: 15px / 225px; /* Creates a curly, torn-paper edge */
+            max-height: 80vh; /* Limit height to 80% of viewport height */
+            overflow-y: auto; /* Enable vertical scrolling */
         }
 
         .letter::before,
